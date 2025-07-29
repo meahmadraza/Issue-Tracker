@@ -1,6 +1,6 @@
 import { Card, Flex, Skeleton } from "@radix-ui/themes";
 
-export default function NewIssueLoadingPage() {
+export default function EditIssueLoadingPage() {
     return (
         <div className="max-w-4xl p-4 space-y-4">
 

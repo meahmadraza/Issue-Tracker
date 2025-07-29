@@ -3,7 +3,7 @@ import { Card, Flex, Skeleton } from "@radix-ui/themes";
 
 export default function IssueDetailLoadingPage() {
     return (
-        <div className="p-4">
+        <div className="max-3xl p-4">
             <Skeleton className="h-7 w-2/5" />
             <Flex gap="4" my="4" align="center">
                 <Skeleton className="h-6 w-24" />

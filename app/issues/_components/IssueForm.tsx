@@ -1,23 +1,20 @@
 "use client"
 
-import dynamic from "next/dynamic";
-import "easymde/dist/easymde.min.css";
-import React, { useState } from 'react'
-import axios from "axios";
-import { TextField, Box, Button, Callout, Text } from '@radix-ui/themes'
-import { InfoCircledIcon } from '@radix-ui/react-icons';
-import { useForm, Controller } from 'react-hook-form';
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from 'zod';
-import { IssueSchema } from "@/app/validationSchema";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { Issue } from "@/app/generated/prisma";
+import { IssueSchema } from "@/app/validationSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { Box, Button, Callout, TextField } from '@radix-ui/themes';
+import axios from "axios";
+import "easymde/dist/easymde.min.css";
+import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import SimpleMDE from 'react-simplemde-editor';
 
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-    ssr: false,
-});
 
 type IssueFormData = z.infer<typeof IssueSchema>
 
@@ -33,8 +30,12 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     const Submit = handleSubmit(async (data) => {
         try {
             setSubmitting(true);
-            await axios.post("/api/issues", data)
+            if (issue)
+                axios.patch(`/api/issues/${issue.id}`, data)
+            else
+                await axios.post("/api/issues", data)
             router.push("/issues");
+            router.refresh()
 
         } catch {
             setSubmitting(false);
@@ -43,7 +44,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     })
 
     return (
-        <div className="max-w-2xl p-4">
+        <div className="max-w-4xl p-4">
             {error && <Callout.Root className="mb-4" color="red">
                 <Callout.Icon>
                     <InfoCircledIcon />
@@ -68,7 +69,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
                 <ErrorMessage>
                     {errors.description?.message}
                 </ErrorMessage>
-                <Button disabled={Submitting} >{Submitting ? <Spinner /> : "Submit new Issue"}</Button>
+                <Button disabled={Submitting} >{Submitting ? (<Spinner />) : (issue ? 'Update Issue' : 'Submit new Issue')}</Button>
             </form >
         </div>
     )
