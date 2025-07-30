@@ -9,6 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import DeleteButton from './DeleteButton';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/auth/authOptions';
+import AssigneeSelect from './AssigneeSelect';
 
 interface Props {
     params: {
@@ -33,22 +34,25 @@ const IssueDetailPage = async ({ params }: Props) => {
         notFound();
 
     return (
-        <Box className='p-4 max-w-3xl'>
+        <Box className='p-4 w-full  lg:w-[70%] xl:w-[50%]'>
             <Heading>{issue.title}</Heading>
             <Flex gap='4' my='4'>
                 <IssueStatusBadge status={issue.status}></IssueStatusBadge>
                 <Text>{issue.createdAt.toDateString()}</Text>
             </Flex>
-            <Card mt='6' className='prose'>
+            <Card mt='6' className='prose max-w-none'>
                 <ReactMarkdown>{issue.description}</ReactMarkdown>
             </Card>
-            {session && <Flex gap='4' mt='6' direction='column' width='25%'>
-                <Button>
-                    <Pencil2Icon />
-                    <Link href={`/issues/${issue.id}/edit`}>Edit Issue</Link>
-                </Button>
-                <DeleteButton issue={issue} />
-            </Flex>}
+            <Flex justify='between' mt='6'>
+                {session && <Flex gap='2' direction='column' className='w-[40%] md:w-[20%]'>
+                    <Button>
+                        <Pencil2Icon />
+                        <Link href={`/issues/${issue.id}/edit`}>Edit Issue</Link>
+                    </Button>
+                    <DeleteButton issue={issue} />
+                </Flex>}
+                <AssigneeSelect />
+            </Flex>
         </Box >
     )
 }
