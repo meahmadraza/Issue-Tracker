@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import DeleteButton from './DeleteButton';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/auth/authOptions';
 
 interface Props {
     params: {
@@ -15,6 +17,7 @@ interface Props {
 }
 
 const IssueDetailPage = async ({ params }: Props) => {
+    const session = await getServerSession(authOptions)
 
     if (!ObjectId.isValid(params.id)) {
         notFound();
@@ -39,13 +42,13 @@ const IssueDetailPage = async ({ params }: Props) => {
             <Card mt='6' className='prose'>
                 <ReactMarkdown>{issue.description}</ReactMarkdown>
             </Card>
-            <Flex gap='4' mt='6' direction='column' width='25%'>
+            {session && <Flex gap='4' mt='6' direction='column' width='25%'>
                 <Button>
                     <Pencil2Icon />
                     <Link href={`/issues/${issue.id}/edit`}>Edit Issue</Link>
                 </Button>
                 <DeleteButton issue={issue} />
-            </Flex>
+            </Flex>}
         </Box >
     )
 }
