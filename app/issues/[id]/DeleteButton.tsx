@@ -3,25 +3,32 @@ import { Issue } from '@/app/generated/prisma'
 import { TrashIcon } from '@radix-ui/react-icons'
 import { AlertDialog, Button, Flex } from '@radix-ui/themes'
 import axios from 'axios'
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Spinner from '@/app/components/Spinner'
 
 const DeleteButton = ({ issue }: { issue: Issue }) => {
 
     const Router = useRouter();
+    const [deleting, setDeleting] = useState(false);
 
     const deleteIssue = async () => {
-        await axios.delete(`/api/issues/${issue.id}`);
-        Router.push("/issues");
-        Router.refresh();
+        try {
+            setDeleting(true);
+            await axios.delete(`/api/issues/${issue.id}`);
+            Router.push("/issues");
+            Router.refresh();
+        } catch (error) {
+            setDeleting(false);
+            console.error("Failed to delete issue:", error);
+        }
     }
 
     return (
         <AlertDialog.Root>
             <AlertDialog.Trigger>
-                <Button color='red'>
-                    <TrashIcon />
-                    Delete Issue
+                <Button color='red' disabled={deleting}>
+                    {deleting ? <Spinner /> : (<><TrashIcon /> Delete</>)}
                 </Button>
             </AlertDialog.Trigger>
             <AlertDialog.Content>
