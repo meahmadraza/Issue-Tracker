@@ -51,7 +51,7 @@ const IssueDetailPage = async ({ params }: Props) => {
                     </Button>
                     <DeleteButton issue={issue} />
                 </Flex>}
-                <AssigneeSelect />
+                <AssigneeSelect issue={issue} />
             </Flex>
         </Box >
     )
