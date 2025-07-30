@@ -1,12 +1,12 @@
-import { prisma } from '@/prisma/client'
-import { notFound } from 'next/navigation';
-import React from 'react'
-import { ObjectId } from "mongodb";
-import { Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import IssueStatusBadge from '@/app/components/IssueStatusBadge';
-import ReactMarkdown from 'react-markdown';
-import { Pencil2Icon, TrashIcon } from '@radix-ui/react-icons';
+import { prisma } from '@/prisma/client';
+import { Pencil2Icon } from '@radix-ui/react-icons';
+import { Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { ObjectId } from "mongodb";
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import DeleteButton from './DeleteButton';
 
 interface Props {
     params: {
@@ -28,6 +28,7 @@ const IssueDetailPage = async ({ params }: Props) => {
 
     if (!issue)
         notFound();
+
     return (
         <Box className='p-4 max-w-3xl'>
             <Heading>{issue.title}</Heading>
@@ -43,12 +44,9 @@ const IssueDetailPage = async ({ params }: Props) => {
                     <Pencil2Icon />
                     <Link href={`/issues/${issue.id}/edit`}>Edit Issue</Link>
                 </Button>
-                <Button color='red'>
-                    <TrashIcon />
-                    <Link href={`/issues/${issue.id}/delete`}>Delete Issue</Link>
-                </Button>
+                <DeleteButton issue={issue} />
             </Flex>
-        </Box>
+        </Box >
     )
 }
 
