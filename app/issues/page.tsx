@@ -3,9 +3,26 @@ import Link from 'next/link';
 import { prisma } from '../../prisma/client';
 import IssueStatusBadge from '../components/IssueStatusBadge';
 import IssuesActionBar from './IssuesActionBar';
+import { IssueStatus } from "../generated/prisma";
 
-const IssuePage = async () => {
-    const issues = await prisma.issue.findMany();
+interface Props {
+    searchParams: { status: IssueStatus }
+}
+
+const IssuePage = async ({ searchParams }: Props) => {
+    const params = await searchParams
+    console.log(params.status);
+
+    //Validate Status
+    const statuses = Object.values(IssueStatus)
+    const status = statuses.includes(params.status) ? params.status : undefined
+
+
+    const issues = await prisma.issue.findMany({
+        where: {
+            status: status
+        }
+    });
 
     return (
         <div className="p-4">
