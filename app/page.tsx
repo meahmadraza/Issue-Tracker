@@ -3,7 +3,7 @@ import React from 'react'
 const page = () => {
   return (
     <div>
-      Wellcome!
+      Dashboard is in Progress...
     </div>
   )
 }
