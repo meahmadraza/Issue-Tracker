@@ -1,10 +1,8 @@
 import React from 'react'
 
-const page = () => {
+const page = ({ searchParams }: { searchParams: { page: string } }) => {
   return (
-    <div>
-      Dashboard is in Progress...
-    </div>
+    <div>Dashboard progess in working ....</div>
   )
 }
 

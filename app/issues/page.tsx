@@ -4,9 +4,10 @@ import { prisma } from '../../prisma/client';
 import IssueStatusBadge from '../components/IssueStatusBadge';
 import IssuesActionBar from './IssuesActionBar';
 import { IssueStatus } from "../generated/prisma";
+import Pagination from "../components/Pagination";
 
 interface Props {
-    searchParams: { status: IssueStatus }
+    searchParams: { status: IssueStatus, page: string }
 }
 
 const IssuePage = async ({ searchParams }: Props) => {
@@ -14,18 +15,28 @@ const IssuePage = async ({ searchParams }: Props) => {
     console.log(params.status);
 
     //Validate Status
-    const statuses = Object.values(IssueStatus)
-    const status = statuses.includes(params.status) ? params.status : undefined
+    const statusParam = searchParams.status;
+    const validStatuses = Object.values(IssueStatus);
+    const status = validStatuses.includes(statusParam) ? statusParam : undefined;
 
+
+
+    const page = parseInt(searchParams.page) || 1
+    const pageSize = 10
 
     const issues = await prisma.issue.findMany({
         where: {
             status: status
-        }
+        },
+        skip: (page - 1) * pageSize,
+        take: pageSize
+
     });
 
+    const issueCount = await prisma.issue.count({ where: { status } })
+
     return (
-        <div className="p-4">
+        <div className="flex flex-col p-4 gap-3">
             <IssuesActionBar />
             <Table.Root variant='surface'>
                 <Table.Header>
@@ -50,6 +61,7 @@ const IssuePage = async ({ searchParams }: Props) => {
                     ))}
                 </Table.Body>
             </Table.Root>
+            <Pagination pageSize={pageSize} itemCount={issueCount} currentPage={page} />
         </div>
     )
 }

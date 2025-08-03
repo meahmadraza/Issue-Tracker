@@ -14,12 +14,26 @@ const statuses: { label: string, value?: IssueStatus | 'All' }[] = [
 
 const FilterIssue = () => {
     const router = useRouter();
-    const params = useSearchParams()
+    const searchParams = useSearchParams();
+
     return (
-        <Select.Root onValueChange={(status: string) => {
-            const query = status !== 'All' ? `?status=${status}` : '';
-            router.push(`/issues${query}`);
-        }} defaultValue={params.get('status') || ''}>
+        <Select.Root
+            onValueChange={(status: string) => {
+                const params = new URLSearchParams(searchParams.toString());
+
+                if (status === 'All') {
+                    params.delete('status');
+                } else {
+                    params.set('status', status);
+                }
+
+                // Reset to first page on filter
+                params.set('page', '1');
+
+                router.push(`/issues?${params.toString()}`);
+            }}
+            defaultValue={searchParams.get('status') || 'All'}
+        >
             <Select.Trigger placeholder='Filter Issues...' />
             <Select.Content>
                 {statuses.map(status => (
@@ -29,7 +43,7 @@ const FilterIssue = () => {
                 ))}
             </Select.Content>
         </Select.Root>
-    )
-}
+    );
+};
 
-export default FilterIssue
+export default FilterIssue;
