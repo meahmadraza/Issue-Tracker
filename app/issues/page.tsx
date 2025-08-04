@@ -5,6 +5,7 @@ import IssueStatusBadge from '../components/IssueStatusBadge';
 import IssuesActionBar from './IssuesActionBar';
 import { IssueStatus } from "../generated/prisma";
 import Pagination from "../components/Pagination";
+import { Metadata } from "next";
 
 interface Props {
     searchParams: { status: IssueStatus, page: string }
@@ -68,3 +69,7 @@ const IssuePage = async ({ searchParams }: Props) => {
 
 export const dynamic = 'force-dynamic';
 export default IssuePage
+export const metadata: Metadata = {
+    title: 'Issue Tracker - Issues',
+    description: 'Browse and manage all project issues by status, including open, in-progress, and closed. Filter, track, and prioritize issues for efficient project management.'
+}

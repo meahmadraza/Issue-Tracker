@@ -10,6 +10,7 @@ import DeleteButton from './DeleteButton';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/auth/authOptions';
 import AssigneeSelect from './AssigneeSelect';
+import { Description } from '@radix-ui/themes/components/alert-dialog';
 
 interface Props {
     params: {
@@ -58,3 +59,12 @@ const IssueDetailPage = async ({ params }: Props) => {
 }
 
 export default IssueDetailPage
+
+export async function generateMetadata({ params }: Props) {
+    const issue = await prisma.issue.findUnique({ where: { id: params.id } })
+
+    return {
+        title: `Issue Tracker - ${issue?.title}`,
+        Description: 'Explore detailed information about a specific issue, including its status, description, timeline, and related updates to stay informed and take action efficiently.'
+    }
+}
