@@ -26,8 +26,6 @@ const FilterIssue = () => {
                 } else {
                     params.set('status', status);
                 }
-
-                // Reset to first page on filter
                 params.set('page', '1');
 
                 router.push(`/issues?${params.toString()}`);

@@ -10,7 +10,6 @@ import DeleteButton from './DeleteButton';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/auth/authOptions';
 import AssigneeSelect from './AssigneeSelect';
-import { Description } from '@radix-ui/themes/components/alert-dialog';
 import { cache } from 'react';
 
 interface Props {
